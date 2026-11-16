@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title> A page about Ferraris </title>
+
+    <style>
+
+        /* ---------- PAGE BASICS ---------- */
+
+        body {
+            margin: 0;                                /* removes the default white border around the page */
+            font-family: Arial, Helvetica, sans-serif;   /* one font for the whole page */
+        }
+        html {
+    scroll-behavior: smooth;       /* glide to the section instead of jumping */
+        }
+
+        #top_bar {
+            background: linear-gradient(to bottom,rgb(0,0,0,0.4),transparent) ;
+            background-color: rgb(255, 40, 0);
+            text-align:right;
+            color: black;
+            display: flex;
+            justify-content: flex-end;
+            gap:10px;
+            padding: 1%;
+        }
+
+        #top_bar a {
+         color: black;
+         text-decoration: none;     /*removes the underline*/
+         font-family: Arial, Helvetica, sans-serif;
+         font-weight: bold;
+        }
+
+        #top_bar a:hover {
+            color:white
+        }
+
+
+        /* ---------- HERO: header + slideshow + intro ---------- */
+
+        .hero {
+            position: relative;     /* the header will be positioned against THIS box */
+        }
+
+        #header {
+            position: absolute;     /* lifts the header out of the normal flow so it floats over the pictures */
+            top: 0;                 /* glued to the top edge of .hero */
+            left: 0;
+            width: 100%;            /* absolute elements shrink to fit their text, so we stretch it */
+            z-index: 10;            /* stacking order: higher number = in front of the pictures */
+            background: linear-gradient(to bottom, black, transparent);  /* black at top, fades into the pictures */
+            color: #d0d0d0;         /* light grey: readable on black */
+            text-align: center;
+            font-size: x-large;
+            padding: 1.5rem 0 4rem; /* text stays in the dark part, the extra bottom space is the fade */
+            pointer-events: none;   /* clicks and hover pass through the header to the slideshow */
+        }
+
+        .slideshow {
+            position: relative;     /* makes this box the "parent" the images are positioned against */
+            width: 100%;            /* full page width */
+            aspect-ratio: 16 / 9;
+            max-height: 60vh;
+            overflow: hidden;       /* same window trick as the ticker: cut off anything outside */
+            background-color: black;   /* shows during the brief moment between fades */
+        }
+
+        #intro {
+            position: absolute;
+            bottom: 0;              /* glued to the bottom edge */
+            left: 0;
+            width: 100%;
+            z-index: 10;
+            background: linear-gradient(to top, black, transparent);
+            color: #d0d0d0;         /* black text would vanish on black */
+            text-align: center;
+            font-size: larger;
+            padding: 4rem 1rem 1.5rem;   /* fade space at the TOP this time */
+            box-sizing: border-box;      /* keeps padding inside the 100% width */
+        }
+
+        #intro a {
+            color: azure;           /* readable link colour on black */
+        }
+
+
+        /* ---------- SLIDESHOW ---------- */
+
+        .slideshow img {
+            position: absolute;     /* takes the image out of normal flow, so all 5 stack on top of each other */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;    /* shows the WHOLE picture, no cropping */
+            opacity: 0;             /* every image starts invisible */
+            animation: slide-fade 25s infinite;   /* 25s = 5 images x 5 seconds each */
+        }
+
+        /* each image starts its animation 5 seconds after the previous one */
+        .slideshow img:nth-child(1) { animation-delay: 0s; }
+        .slideshow img:nth-child(2) { animation-delay: 5s; }
+        .slideshow img:nth-child(3) { animation-delay: 10s; }
+        .slideshow img:nth-child(4) { animation-delay: 15s; }
+        .slideshow img:nth-child(5) { animation-delay: 20s; }
+
+        @keyframes slide-fade {
+            0%   { opacity: 0; }    /* start invisible */
+            4%   { opacity: 1; }    /* fade in (4% of 25s = 1 second) */
+            20%  { opacity: 1; }    /* stay visible until 20% (5 seconds after start) */
+            24%  { opacity: 0; }    /* fade out over another 1 second */
+            100% { opacity: 0; }    /* stay invisible while the other 4 images take their turns */
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .slideshow img { animation: none; }
+            .slideshow img:first-child { opacity: 1; }   /* just show the first picture */
+        }
+
+
+        /* ---------- TEXT + VIDEO ROW ---------- */
+
+        #with_gif {
+            display: flex;                    /* children sit side by side in a row */
+            align-items: center;              /* centers them vertically */
+            justify-content: space-between;   /* horizontal setting: text left, video right */
+            flex-wrap: wrap;                  /* if there's no room, the video drops under the text */
+            gap: 2rem;                        /* minimum space between text and video */
+            padding: 5%;                      /* breathing room inside the box */
+            background-color: white;
+            color: black;
+            text-align: left;
+            font-size: clamp(2rem, 6vw, 4.5rem);   /* scales with the screen: never under 2rem, never over 4.5rem */
+        }
+
+
+        /* ---------- HISTORY ---------- */
+
+        #History {
+            background-color: black;
+            text-align: center;
+            color: white;
+            padding: 4%;
+            font-size: 2rem;
+        }
+
+        #History h2 {
+            margin: 0 0 1rem;       /* removes the default top space, keeps a little below */
+            font-size: inherit;     /* same size as the paragraph, not the default bigger heading */
+            font-weight: normal;
+            font-style: italic;
+        }
+
+
+        /* ---------- HISTORY PICTURES ---------- */
+
+        #His_pics {                 /* THE BOX (the shelf) */
+            background-color: black;
+            display: flex;
+            align-items: center;
+            gap: 12px;              /* those tiny gaps between pics */
+            padding: 1%;        /* room so a hovered edge picture doesn't poke off the screen */
+        }
+
+        #His_pics img {             /* EACH PICTURE (the books) */
+            flex: 1;                /* every picture takes an equal share of the row */
+            min-width: 0;           /* lets them shrink below 1600px */
+            width: 100%;            /* fill that share */
+            height: auto;           /* keeps the 16:9 shape, no stretching */
+            position: relative;     /* needed so z-index works */
+            transition: 0.3s;       /* makes the change smooth instead of instant */
+        }
+
+        #His_pics img:hover {
+            transform: scale(1.1);  /* grows to 110% of its size */
+            z-index: 5;             /* pops in front of its neighbours */
+        }
+
+        #interior{
+            background-color: white;
+            margin:0cm ; 
+            font-weight:500;
+            text-align: center;
+            padding: 2% 5% 2% 5%;   /* top | right | bottom | left */
+            font-size: x-large;
+            
+        }
+
+        #intpics {
+            background-color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 2% 5% 3% 5%;   /* top | right | bottom | left */
+        }
+
+        #intpics img {
+            flex:1;
+            min-width: 0;
+            border-radius: 15px;
+            height: auto;
+            position: relative;
+            transition: 0.8s;
+        }
+
+        #intpics img:hover {
+            transform: scale(1.1);
+            z-index: 10;
+        }
+
+        #icons {
+           background-color: black;
+           color: white;
+           text-align: center;
+           padding: 2% 5%;
+        }
+        #icons h4 {
+            margin: 0 0 2rem;                   /* space under the heading */
+            font-weight: normal;
+        }
+        .cards {
+         display: grid;                         /* children become grid items */
+         grid-template-columns: repeat(2,1fr);  /* 2 equal columns */ 
+         gap: 2rem;                             /* space between the cards */
+         max-width: 1500px;                      /* stops them stretching too wide */
+         margin: 0 auto;                        /* centres the holder */
+        } 
+
+        .card {                     /* EACH CARD */
+            background-color: #1a1a1a;        /* slightly lighter than the black page, so the card is visible */
+            border-radius: 12px;                /* rounded corners */
+            overflow: hidden;                   /* clips the photo to the rounded corners */
+            padding-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            transition: 0.3s;                   /* on the normal rule, so it eases back too */
+        }
+        .card img {
+            width: 100%;                         /* photo fills the card width */
+            height: auto;
+            display: block;                      /* removes a small gap under images */
+            opacity: 0.90;                       /* Yay! youve added a bit of opacity!*/ 
+            transition: 0.3s;
+        }
+        .card p {
+            margin: 0;
+            padding: 0 1rem;
+            color: #d0d0d0;
+        }
+        .card:hover {
+            transform: translateY(-8px);         /* lifts the card up */
+            box-shadow: 0 12px 28px rgba(255, 40, 0, 0.35);   /* red glow, since a dark shadow is invisible on black */
+                                                  
+        }
+        .card:hover img {
+            opacity:1;
+        }
+        #footer {
+            background: linear-gradient(to bottom, black, transparent);
+            color: black;
+            text-align: center;
+            padding: 2% 4%;
+            
+        }
+        #footer a {
+            color: rgb(255, 40, 0);
+            text-decoration: none;
+            text-transform: uppercase;
+        }
+        #Safe {
+         background-color: black;
+         color: white;
+         text-decoration: underline;
+         text-align: left;
+         font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+         font-size: smaller;
+        }
+
+
+    </style>
+
+</head>
+
+
+<body>
+    <div id="top_bar">
+        <a href="#History">History</a>
+        <a href="#interior">Interiors</a>
+    </div>
+
+    <div class="hero">
+
+        <div id="header"><i>For Those who seek Perfection...</i></div>
+
+        <div class="slideshow">
+            <img src="488.jpg" alt="Ferrari 488">
+            <img src="296.jpg" alt="Ferrari 296">
+            <img src="purosangue.jpg" alt="Ferrari Purosangue">
+            <img src="Amalfi.jpg" alt="Ferrari Amalfi">
+            <img src="12Cilindri.jpg" alt="Ferrari 12Cilindri">
+        </div>
+
+        <div id="intro">
+            <i>Every Ferrari is a true masterpiece...</i>
+            <br>
+            <a href="https://ferrari.com" target="_blank">check them out yourself!</a>
+        </div>
+
+    </div>
+
+
+    <div id="with_gif">
+
+        <p>Ferrari...<br> Is Passion..<br> In Motion...</p>
+
+        <video src="pferd.mp4" autoplay muted loop playsinline width="150"></video>
+
+    </div>
+
+
+    <div id="History">
+
+        <h2>A True Legacy..</h2>
+
+        <p>
+            <i>
+                Born from Enzo Ferrari's obsession with victory, the prancing horse rose from Maranello in 1947 and never looked back.
+                Every championship, every roar, every road car carries that same fire: speed, forged into legend.
+            </i>
+        </p>
+
+    </div>
+
+
+    <div id="His_pics">
+
+        <img src="Enzo.jpg"     alt="Enzo-himself">
+        <img src="125.jpg"      alt="a-125">
+        <img src="166.jpg"      alt="a-166">
+        <img src="250.jpg"      alt="a-250">
+        <img src="testaa.jpg"   alt="a-testarossa">
+
+    </div>
+
+    <div id="interior">
+         <h3><i>Impressive,.. Within & Without</i></h3>
+        <p><i>From hand-stitched leather cockpits built purely for the driver to digital, tech-forward cabins, 
+            Ferrari interiors have evolved without ever losing their racing soul</i></p>
+
+    </div>
+
+
+    <div id="intpics">
+
+        <img src="int63gto.jpg" alt="interiorgto">
+        <img src="int96355.jpg" alt="interior355">
+        <img src="int12ff.jpg"  alt="interior2012ff">
+    
+    </div>
+
+    <div id="icons">
+
+    <h4><i>Our Icons, Our Identity...</i></h4>
+
+    <div class="cards">
+
+        <div class="card">
+            <img src="icon1.png" alt="LaFerrari">
+            <h5>LA FERRARI - 2013</h5>
+            <p>Because This Represents Who We Are</p>
+        </div>
+
+        <div class="card">
+            <img src="icon2.png" alt="Ferrari Enzo">
+            <h6>FERRARI ENZO - 2002</h6>
+            <p>To Honor His Name</p>
+        </div>
+
+    </div>
+
+</div>
+
+<div id="footer">
+    <i>More Pictures available</i>
+    <a href="https://pinterest.com" target="_blank">Here</a>
+</div>
+
+<div id=Safe>
+    <i> This is only a fanpage, not related to Ferrari in any way.</i>
+</div>
+
+
+
+</body>
+
+</html>
